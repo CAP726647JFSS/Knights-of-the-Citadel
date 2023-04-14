@@ -2,6 +2,7 @@ import pygame, sys, random, math
 from pygame.locals import *
 
 from projectile import Projectile
+from entityHandler import entities, Entity
 
 # Initialize pygame and set display settings
 pygame.init()
@@ -10,13 +11,16 @@ asset_background_image = pygame.image.load('Assets/Tower/towerdefensebackground.
 background_image = pygame.transform.scale(asset_background_image, (900, 500))
 pygame.display.set_caption('Knights of the Citadel')
 
-circleX = 600
-circleY = 600
 projectiles = []
 
 castle_image = pygame.transform.scale(pygame.image.load('Assets/Tower/tower.png'), (85, 130))
 basic_bullet_image = pygame.transform.scale(pygame.image.load('Assets/Bullets/light_bullet.png'), (10, 10))
 
+castle = Entity(castle_image, 100, True)
+
+def handle_collision(entity1, entity2):
+ # Placeholder method - implement collision behavior here
+ print(entity1, entity2)
 
 runGame = True
 while runGame:
@@ -38,26 +42,31 @@ while runGame:
     # fire the projectile when the spacebar is pressed
     if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
         pos = [430 + math.cos(mouseAngle) * 25, 190 + math.sin(mouseAngle) * 25]
-        vel = [math.cos(mouseAngle) * 20, math.sin(mouseAngle) * 20]
+        vel = [math.cos(mouseAngle) * 10, math.sin(mouseAngle) * 10]
         size = 10
-        projectile = Projectile(pos, vel, size, basic_bullet_image)
+        damage = 10
+        projectile = Projectile(pos, vel, size, damage, basic_bullet_image)
         projectiles.append(projectile)
 
   # update the projectiles
   for projectile in projectiles:
     projectile.update()
     if projectile.pos[0] < 0 or projectile.pos[0] > 900 or projectile.pos[1] < 0 or projectile.pos[1] > 500:
-      projectiles.remove(projectile)
+      projectile.kill()
 
   # draw the projectiles
   for projectile in projectiles:
-      projectile.draw(window)
+    projectile.draw(window)
+
+  collisions = pygame.sprite.groupcollide(entities, entities, False, False)
+  for entity1, collided_entities in collisions.items():
+    for entity2 in collided_entities:
+      if entity1 != entity2:
+        print(entity1.rect, entity2.rect)
 
 
-
-  
   pygame.event.pump()
-  pygame.time.delay(50)
+  pygame.time.delay(500)
   pygame.display.update()
   
 

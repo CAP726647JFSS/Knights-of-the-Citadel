@@ -1,31 +1,38 @@
 import pygame
 import math
+from entityHandler import entities, Entity
 
-class Projectile:
-    def __init__(self, pos, vel, size, sprite, sprite_frames = []):
-        self.pos = pos
-        self.vel = vel
-        self.size = size
-        self.angle = 0
-        self.sprite_frames = [sprite]
-        self.sprite = sprite
-        self.frame = 0
-        self.animation_speed = 5  # Number of frames to wait before switching to next animation frame
+class Projectile(pygame.sprite.Sprite):  
+  def __init__(self, pos, vel, size, damage, sprite_image, sprite_frames = []):
+    super().__init__()
+    self.image = sprite_image
+    self.rect = self.image.get_rect(center=pos)
+    self.pos = pos
+    self.vel = vel
+    self.size = size
+    self.angle = 0
+    self.damage = damage
+    self.sprite_frames = [sprite_image]
+    self.sprite = sprite_image
+    self.frame = 0
+    self.animation_speed = 5
+    self.frame_counter = 0
+    entities.add(self)
+
+  def update(self):
+    self.pos[0] += self.vel[0]
+    self.pos[1] += self.vel[1]
+    self.angle = math.degrees(math.atan2(self.vel[1], self.vel[0]))
+    self.frame_counter += 1
+    if self.frame_counter >= self.animation_speed:
         self.frame_counter = 0
+        self.frame = (self.frame + 1) % len(self.sprite_frames)
+        self.sprite = self.sprite_frames[self.frame]
+        self.image = pygame.transform.rotate(self.sprite, -self.angle)
+        self.rect = self.image.get_rect(center=self.pos)
 
-    def update(self):
-        self.pos[0] += self.vel[0]
-        self.pos[1] += self.vel[1]
-        self.angle = math.degrees(math.atan2(self.vel[1], self.vel[0]))
-        self.frame_counter += 1
-        if self.frame_counter >= self.animation_speed:
-            self.frame_counter = 0
-            self.frame = (self.frame + 1) % len(self.sprite_frames)
-            self.sprite = self.sprite_frames[self.frame]
+  def draw(self, surface):
+    surface.blit(self.image, self.rect)
 
-    def draw(self, surface):
-        rotated_surface = pygame.transform.rotate(pygame.Surface((self.size*2, self.size*2), pygame.SRCALPHA), -self.angle)
-        sprite_rect = pygame.Rect(self.sprite.get_rect())
-        sprite_rect.center = (self.size, self.size)
-        rotated_surface.blit(self.sprite, sprite_rect)
-        surface.blit(rotated_surface, (self.pos[0]-self.size, self.pos[1]-self.size))
+  def kill(self):
+    super().kill()

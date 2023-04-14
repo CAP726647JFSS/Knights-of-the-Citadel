@@ -1,4 +1,5 @@
 import pygame
+import entityHandler
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, image_paths, x_speed, y_speed):
