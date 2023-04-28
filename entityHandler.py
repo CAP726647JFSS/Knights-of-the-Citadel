@@ -15,7 +15,7 @@ class Entity(pygame.sprite.Sprite):
     self.hitbox = self.rect
     self.max_health = max_health
     self.current_health = max_health
-    print("EntityCreated")
+    #print("EntityCreated")
 
   def update_hitbox(self):
     self.hitbox = self.rect

@@ -41,12 +41,23 @@ while runGame:
 
     # fire the projectile when the spacebar is pressed
     if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-        pos = [430 + math.cos(mouseAngle) * 25, 190 + math.sin(mouseAngle) * 25]
-        vel = [math.cos(mouseAngle) * 10, math.sin(mouseAngle) * 10]
-        size = 10
-        damage = 10
-        projectile = Projectile(pos, vel, size, damage, basic_bullet_image)
-        projectiles.append(projectile)
+      match projectileType:
+        case "lightBullet":
+          pos = [430 + math.cos(mouseAngle) * 25, 190 + math.sin(mouseAngle) * 25]
+          vel = [math.cos(mouseAngle) * 10, math.sin(mouseAngle) * 10]
+          size = 10
+          damage = 10
+          projectile = Projectile(pos, vel, size, damage, basic_bullet_image)
+          projectiles.append(projectile)
+        case "fireBall":
+          pass
+        case "lightningBolt"
+          pass
+        case "poisonCloud":
+          pass
+        case "holyHandGrenade":
+          pass
+
 
   # update the projectiles
   for projectile in projectiles:
@@ -62,11 +73,12 @@ while runGame:
   for entity1, collided_entities in collisions.items():
     for entity2 in collided_entities:
       if entity1 != entity2:
-        print(entity1.rect, entity2.rect)
+        pass
+        #print(entity1.rect, entity2.rect)
 
 
   pygame.event.pump()
-  pygame.time.delay(500)
+  pygame.time.delay(50)
   pygame.display.update()
   
 
