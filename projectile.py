@@ -5,15 +5,21 @@ from entityHandler import entities, Entity
 class Projectile(pygame.sprite.Sprite):  
   def __init__(self, pos, vel, size, damage, sprite_image, sprite_frames = []):
     super().__init__()
-    self.image = sprite_image
-    self.rect = self.image.get_rect(center=pos)
+    self.sprite = sprite_image
     self.pos = pos
     self.vel = vel
     self.size = size
-    self.angle = 0
+    if self.size != 15:
+      self.angle = math.degrees(math.atan2(self.vel[1], self.vel[0]))
+    else:
+      self.angle = 0
+    self.image = pygame.transform.rotate(self.sprite, -self.angle)
+    self.rect = self.image.get_rect(center=pos)
     self.damage = damage
-    self.sprite_frames = [sprite_image]
-    self.sprite = sprite_image
+    if sprite_frames == []:
+      self.sprite_frames = [sprite_image]
+    else:
+      self.sprite_frames = sprite_frames
     self.frame = 0
     self.animation_speed = 5
     self.frame_counter = 0
@@ -28,7 +34,8 @@ class Projectile(pygame.sprite.Sprite):
         self.frame_counter = 0
         self.frame = (self.frame + 1) % len(self.sprite_frames)
         self.sprite = self.sprite_frames[self.frame]
-        self.image = pygame.transform.rotate(self.sprite, -self.angle)
+        if self.size != 15:
+          self.image = pygame.transform.rotate(self.sprite, -self.angle)
         self.rect = self.image.get_rect(center=self.pos)
 
   def draw(self, surface):
