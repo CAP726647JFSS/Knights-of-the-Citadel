@@ -94,4 +94,4 @@ class PauseMenu(Menu):
         if MainMenu.gameOver:
             self.defeatScreen.update()
             self.mainMenuButton2.update()
-            window.blit(self.font.render(f"High Score: {SettingsMenu.highScore}", 1, (255, 200, 0)), (300, 350))
+            window.blit(self.font.render(f"High Score: {SettingsMenu.highScore}", 1, (255, 200, 0)), (350, 350))
